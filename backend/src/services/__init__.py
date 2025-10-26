@@ -1,1 +1,4 @@
-"""Services package"""
+"""Services package with business logic layer."""
+from .base import BaseService
+
+__all__ = ["BaseService"]
