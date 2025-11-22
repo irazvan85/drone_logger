@@ -263,63 +263,55 @@ drone_logger/
 - [ ] Research export format libraries (geojson, kml)
 - [ ] Create architecture decision records (ADRs)
 
-### Phase 1: Data Model & API Design (2-3 days)
+### Phase 1: Project Setup & Infrastructure (2-3 days)
 
-- [ ] Define SQLAlchemy data models (Photo, GPSLocation, Flight, Collection)
-- [ ] Design and document API contracts (OpenAPI/Swagger)
-- [ ] Implement database schema and migrations
-- [ ] Create Pydantic request/response schemas
-- [ ] Design React component hierarchy and props
-- [ ] Set up frontend/backend development environments
-- [ ] Create quickstart guide for local development
+- [ ] Initialize both backend and frontend projects
+- [ ] Configure linting, testing, and CI/CD tools
+- [ ] Create project structure and documentation
 
-### Phase 2: Core Backend Implementation (4-5 days)
+### Phase 2: Foundational Infrastructure (3-4 days)
 
-- [ ] Implement GPS extractor service with EXIF parsing
-- [ ] Implement photo processor for file scanning and import
-- [ ] Implement collection management endpoints
-- [ ] Implement flight analyzer for statistics and path calculation
-- [ ] Implement export service (GeoJSON, CSV, KML)
-- [ ] Implement basic error handling and validation
-- [ ] Write unit tests for all services (target: 80% coverage)
-- [ ] Write integration tests for import workflow
+- [ ] Implement core backend infrastructure (DB, Error Handling, Utils)
+- [ ] Implement core frontend infrastructure (API Client, Layout, Routing)
+- [ ] **BLOCKER**: Must be complete before User Stories
 
-### Phase 3: Core Frontend Implementation (4-5 days)
+### Phase 3: User Story 1 - Import Photos and Extract GPS Metadata (P1)
 
-- [ ] Set up React project with TypeScript and Vite
-- [ ] Implement map component with Leaflet.js
-- [ ] Implement photo import UI
-- [ ] Implement marker rendering and interactions
-- [ ] Implement photo list view
-- [ ] Implement basic API integration
-- [ ] Write component tests (target: 80% coverage)
+- [ ] Implement Photo and Collection models
+- [ ] Implement GPS extraction service
+- [ ] Implement Import UI and Photo List
+- [ ] **Deliverable**: Working import workflow
 
-### Phase 4: Features & Polish (3-4 days)
+### Phase 4: User Story 2 - Display Photos on Interactive Map (P1)
 
-- [ ] Implement filtering (date range, bounding box)
-- [ ] Implement flight statistics display
-- [ ] Implement export UI
-- [ ] Implement collection management UI
-- [ ] Add loading states and error messages
-- [ ] Add accessibility features (keyboard nav, ARIA labels)
-- [ ] Responsive design for tablets
+- [ ] Implement Location models and services
+- [ ] Implement Map component with Leaflet
+- [ ] Integrate Map with Photo data
+- [ ] **Deliverable**: Interactive Map visualization (MVP Complete)
 
-### Phase 5: Testing & Optimization (2-3 days)
+### Phase 5: User Story 3 - Browse and Filter Photos by Location (P2)
 
-- [ ] Write E2E tests for critical workflows
-- [ ] Performance optimization and profiling
-- [ ] Cross-browser testing
-- [ ] Load testing with large photo collections
-- [ ] Security review (file system access, input validation)
-- [ ] Performance regression testing
+- [ ] Implement Date Range and Bounding Box filters
+- [ ] Implement real-time map updates
+- [ ] **Deliverable**: Advanced filtering capabilities
 
-### Phase 6: Documentation & Deployment (1-2 days)
+### Phase 6: User Story 4 - Export and Share Flight Data (P2)
 
-- [ ] Complete API documentation
-- [ ] Write deployment guide
-- [ ] Create user documentation
-- [ ] Record demo/tutorial
-- [ ] Final code review and PR merge
+- [ ] Implement Export service (GeoJSON, CSV, KML)
+- [ ] Implement Export UI
+- [ ] **Deliverable**: Data export functionality
+
+### Phase 7: User Story 5 - Visualize Flight Path and Statistics (P3)
+
+- [ ] Implement Flight analysis logic (path, stats)
+- [ ] Implement Flight Path visualization on map
+- [ ] **Deliverable**: Flight analytics
+
+### Phase 8: Cross-Cutting Concerns & Polish (2-3 days)
+
+- [ ] Performance optimization
+- [ ] Accessibility and Responsive Design
+- [ ] Final Testing and Documentation
 
 ## Development Environment Setup
 

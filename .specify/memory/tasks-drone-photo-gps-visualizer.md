@@ -26,17 +26,17 @@
 
 **Purpose**: Initialize both backend and frontend projects with proper structure, tooling, and configuration
 
-- [ ] T001 [P] Create project directory structure per plan (backend/, frontend/, .specify/memory/)
-- [ ] T002 [P] Initialize Python backend: create venv, setup pyproject.toml and requirements.txt
-- [ ] T003 [P] Initialize Node.js frontend: npm init, install Vite and React
-- [ ] T004 [P] Configure Python linting tools: black, flake8, mypy in backend
-- [ ] T005 [P] Configure Node.js linting tools: ESLint, Prettier in frontend
-- [ ] T006 [P] Setup pytest configuration in `backend/tests/conftest.py` with fixture examples
-- [ ] T007 [P] Setup Vitest configuration in `frontend/vitest.config.ts`
-- [ ] T008 [P] Create `.env.example` files for both backend and frontend
-- [ ] T009 Create GitHub Actions CI/CD workflow for automated testing and linting
-- [ ] T010 Create README.md files for backend and frontend documentation
-- [ ] T011 Initialize git repository with initial commit
+- [x] T001 [P] Create project directory structure per plan (backend/, frontend/, .specify/memory/)
+- [x] T002 [P] Initialize Python backend: create venv, setup pyproject.toml and requirements.txt
+- [x] T003 [P] Initialize Node.js frontend: npm init, install Vite and React
+- [x] T004 [P] Configure Python linting tools: black, flake8, mypy in backend
+- [x] T005 [P] Configure Node.js linting tools: ESLint, Prettier in frontend
+- [x] T006 [P] Setup pytest configuration in `backend/tests/conftest.py` with fixture examples
+- [x] T007 [P] Setup Vitest configuration in `frontend/vitest.config.ts`
+- [x] T008 [P] Create `.env.example` files for both backend and frontend
+- [x] T009 Create GitHub Actions CI/CD workflow for automated testing and linting
+- [x] T010 Create README.md files for backend and frontend documentation
+- [x] T011 Initialize git repository with initial commit
 
 **Checkpoint**: Both projects are scaffolded, dependencies installed, tooling configured, and ready for foundational work
 
@@ -50,28 +50,28 @@
 
 ### Backend Foundation
 
-- [ ] T012 Create SQLAlchemy base model and session management in `backend/src/db/base.py` and `backend/src/db/session.py`
-- [ ] T013 [P] Create Pydantic base schemas and common validation in `backend/src/schemas/__init__.py`
-- [ ] T014 [P] Implement global error handling middleware in `backend/src/middleware/error_handler.py`
-- [ ] T015 [P] Create custom exception classes in `backend/src/utils/errors.py` (InvalidGPSData, PhotoProcessingError, ExportError, etc.)
-- [ ] T016 [P] Implement geospatial utility functions in `backend/src/utils/geospatial.py` (distance calculation, bounds checking, coordinate validation)
-- [ ] T017 [P] Implement file utility functions in `backend/src/utils/file_utils.py` (file scanning, path validation, hashing)
-- [ ] T018 Create database initialization script in `backend/src/db/init_db.py`
-- [ ] T019 Configure FastAPI application in `backend/src/app.py` with middleware, error handlers, CORS
-- [ ] T020 Create API routing structure in `backend/src/api/v1/routes.py` (router aggregation)
-- [ ] T021 Setup logging configuration in `backend/src/config.py`
+- [x] T012 Create SQLAlchemy base model and session management in `backend/src/db/base.py` and `backend/src/db/session.py`
+- [x] T013 [P] Create Pydantic base schemas and common validation in `backend/src/schemas/__init__.py`
+- [x] T014 [P] Implement global error handling middleware in `backend/src/middleware/error_handler.py`
+- [x] T015 [P] Create custom exception classes in `backend/src/utils/errors.py` (InvalidGPSData, PhotoProcessingError, ExportError, etc.)
+- [x] T016 [P] Implement geospatial utility functions in `backend/src/utils/geospatial.py` (distance calculation, bounds checking, coordinate validation)
+- [x] T017 [P] Implement file utility functions in `backend/src/utils/file_utils.py` (file scanning, path validation, hashing)
+- [x] T018 Create database initialization script in `backend/src/db/init_db.py`
+- [x] T019 Configure FastAPI application in `backend/src/app.py` with middleware, error handlers, CORS
+- [x] T020 Create API routing structure in `backend/src/api/v1/routes.py` (router aggregation)
+- [x] T021 Setup logging configuration in `backend/src/config.py`
 
 ### Frontend Foundation
 
-- [ ] T022 [P] Create TypeScript type definitions in `frontend/src/types/index.ts` (Photo, GPSLocation, Flight, Collection, API responses)
-- [ ] T023 [P] Implement API client service in `frontend/src/services/api.ts` with Axios interceptors and error handling
-- [ ] T024 [P] Create global error boundary component in `frontend/src/components/Common/ErrorBoundary.tsx`
-- [ ] T025 [P] Setup React Router configuration in `frontend/src/App.tsx`
-- [ ] T026 [P] Create layout components (Header, Sidebar) in `frontend/src/components/Common/`
-- [ ] T027 [P] Configure global CSS and styling setup in `frontend/src/styles/index.css`
-- [ ] T028 Create React Query client configuration in `frontend/src/services/queryClient.ts`
-- [ ] T029 Implement localStorage utilities in `frontend/src/services/storage.ts`
-- [ ] T030 Setup test utilities and mocks in `frontend/tests/setup.ts`
+- [x] T022 [P] Create TypeScript type definitions in `frontend/src/types/index.ts` (Photo, GPSLocation, Flight, Collection, API responses)
+- [x] T023 [P] Implement API client service in `frontend/src/services/api.ts` with Axios interceptors and error handling
+- [x] T024 [P] Create global error boundary component in `frontend/src/components/Common/ErrorBoundary.tsx`
+- [x] T025 [P] Setup React Router configuration in `frontend/src/App.tsx`
+- [x] T026 [P] Create layout components (Header, Sidebar) in `frontend/src/components/Common/`
+- [x] T027 [P] Configure global CSS and styling setup in `frontend/src/styles/index.css`
+- [x] T028 Create React Query client configuration in `frontend/src/services/queryClient.ts`
+- [x] T029 Implement localStorage utilities in `frontend/src/services/storage.ts`
+- [x] T030 Setup test utilities and mocks in `frontend/tests/setup.ts`
 
 **Checkpoint**: Foundation ready - both backend and frontend have core infrastructure. All user story work can now begin in parallel.
 
@@ -85,47 +85,47 @@
 
 ### Data Models for US1
 
-- [ ] T031 [P] [US1] Create Photo model in `backend/src/models/photo.py` (filename, file_path, timestamp, file_size, format, collection_id)
-- [ ] T032 [P] [US1] Create PhotoMetadata model in `backend/src/models/photo.py` (latitude, longitude, altitude, camera_model, iso, shutter_speed, aperture, photo_id FK)
-- [ ] T033 [P] [US1] Create Collection model in `backend/src/models/collection.py` (name, description, created_at, total_photos)
-- [ ] T034 Create database migrations for Photo, PhotoMetadata, Collection tables
+- [x] T031 [P] [US1] Create Photo model in `backend/src/models/photo.py` (filename, file_path, timestamp, file_size, format, collection_id)
+- [x] T032 [P] [US1] Create PhotoMetadata model in `backend/src/models/photo.py` (latitude, longitude, altitude, camera_model, iso, shutter_speed, aperture, photo_id FK)
+- [x] T033 [P] [US1] Create Collection model in `backend/src/models/collection.py` (name, description, created_at, total_photos)
+- [x] T034 Create database migrations for Photo, PhotoMetadata, Collection tables
 
 ### Tests for US1 (Test-First)
 
-- [ ] T035 [P] [US1] Write contract test for `/api/v1/collections` POST endpoint in `backend/tests/contract/test_collections.py` - MUST FAIL
-- [ ] T036 [P] [US1] Write contract test for `/api/v1/photos/import` POST endpoint in `backend/tests/contract/test_photos.py` - MUST FAIL
-- [ ] T037 [P] [US1] Write unit test for EXIF extraction in `backend/tests/unit/test_gps_extractor.py` - MUST FAIL
-- [ ] T038 [P] [US1] Write unit test for file scanning in `backend/tests/unit/test_photo_processor.py` - MUST FAIL
-- [ ] T039 [US1] Write integration test for import workflow (folder → extract → store) in `backend/tests/integration/test_import_workflow.py` - MUST FAIL
+- [x] T035 [P] [US1] Write contract test for `/api/v1/collections` POST endpoint in `backend/tests/contract/test_collections.py` - MUST FAIL
+- [x] T036 [P] [US1] Write contract test for `/api/v1/photos/import` POST endpoint in `backend/tests/contract/test_photos.py` - MUST FAIL
+- [x] T037 [P] [US1] Write unit test for EXIF extraction in `backend/tests/unit/test_gps_extractor.py` - MUST FAIL
+- [x] T038 [P] [US1] Write unit test for file scanning in `backend/tests/unit/test_photo_processor.py` - MUST FAIL
+- [x] T039 [US1] Write integration test for import workflow (folder → extract → store) in `backend/tests/integration/test_import_workflow.py` - MUST FAIL
 
 ### Backend Implementation for US1
 
-- [ ] T040 [P] [US1] Implement GPS extractor service in `backend/src/services/gps_extractor.py` (extract_from_photo, normalize_coordinates, validate_gps_data)
-- [ ] T041 [P] [US1] Implement photo processor service in `backend/src/services/photo_processor.py` (scan_folder, process_photos, create_photo_records)
-- [ ] T042 [P] [US1] Implement collection manager service in `backend/src/services/collection_manager.py` (create_collection, get_collection, list_collections)
-- [ ] T043 [US1] Create collection endpoints in `backend/src/api/v1/collections.py` (POST /collections, GET /collections, GET /collections/{id})
-- [ ] T044 [US1] Create photo endpoints in `backend/src/api/v1/photos.py` (POST /photos/import, GET /photos, GET /photos/{id})
-- [ ] T045 [US1] Add input validation for folder paths and collection names in `backend/src/utils/validators.py`
-- [ ] T046 [US1] Add error handling for corrupted EXIF, invalid GPS data, missing files
-- [ ] T047 [US1] Add logging for import operations in services
+- [x] T040 [P] [US1] Implement GPS extractor service in `backend/src/services/gps_extractor.py` (extract_from_photo, normalize_coordinates, validate_gps_data)
+- [x] T041 [P] [US1] Implement photo processor service in `backend/src/services/photo_processor.py` (scan_folder, process_photos, create_photo_records)
+- [x] T042 [P] [US1] Implement collection manager service in `backend/src/services/collection_manager.py` (create_collection, get_collection, list_collections)
+- [x] T043 [US1] Create collection endpoints in `backend/src/api/v1/collections.py` (POST /collections, GET /collections, GET /collections/{id})
+- [x] T044 [US1] Create photo endpoints in `backend/src/api/v1/photos.py` (POST /photos/import, GET /photos, GET /photos/{id})
+- [x] T045 [US1] Add input validation for folder paths and collection names in `backend/src/utils/validators.py`
+- [x] T046 [US1] Add error handling for corrupted EXIF, invalid GPS data, missing files
+- [x] T047 [US1] Add logging for import operations in services
 
 ### Frontend Implementation for US1
 
-- [ ] T048 [P] [US1] Create FolderSelector component in `frontend/src/components/PhotoImport/FolderSelector.tsx`
-- [ ] T049 [P] [US1] Create ImportProgress component in `frontend/src/components/PhotoImport/ImportProgress.tsx`
-- [ ] T050 [P] [US1] Create ImportSummary component in `frontend/src/components/PhotoImport/ImportSummary.tsx`
-- [ ] T051 [P] [US1] Create PhotoList component in `frontend/src/components/PhotoList/PhotoGrid.tsx`
-- [ ] T052 [P] [US1] Create PhotoCard component in `frontend/src/components/PhotoList/PhotoCard.tsx`
-- [ ] T053 [US1] Create usePhotos hook in `frontend/src/hooks/usePhotos.ts` (query photos, import photos mutation)
-- [ ] T054 [US1] Create useCollections hook in `frontend/src/hooks/useCollections.ts` (create, get, list collections)
-- [ ] T055 [US1] Create Dashboard page in `frontend/src/pages/Dashboard.tsx` with import and list UI
-- [ ] T056 [US1] Add error messages and validation feedback in UI
+- [x] T048 [P] [US1] Create FolderSelector component in `frontend/src/components/PhotoImport/FolderSelector.tsx`
+- [x] T049 [P] [US1] Create ImportProgress component in `frontend/src/components/PhotoImport/ImportProgress.tsx`
+- [x] T050 [P] [US1] Create ImportSummary component in `frontend/src/components/PhotoImport/ImportSummary.tsx`
+- [x] T051 [P] [US1] Create PhotoList component in `frontend/src/components/PhotoList/PhotoGrid.tsx`
+- [x] T052 [P] [US1] Create PhotoCard component in `frontend/src/components/PhotoList/PhotoCard.tsx`
+- [x] T053 [US1] Create usePhotos hook in `frontend/src/hooks/usePhotos.ts` (query photos, import photos mutation)
+- [x] T054 [US1] Create useCollections hook in `frontend/src/hooks/useCollections.ts` (create, get, list collections)
+- [x] T055 [US1] Create Dashboard page in `frontend/src/pages/Dashboard.tsx` with import and list UI
+- [x] T056 [US1] Add error messages and validation feedback in UI
 
 ### Tests for US1 Frontend
 
-- [ ] T057 [P] [US1] Write component test for FolderSelector in `frontend/tests/unit/components/PhotoImport/FolderSelector.test.tsx`
-- [ ] T058 [P] [US1] Write component test for PhotoCard in `frontend/tests/unit/components/PhotoList/PhotoCard.test.tsx`
-- [ ] T059 [US1] Write integration test for import workflow in `frontend/tests/integration/import-workflow.test.tsx`
+- [x] T057 [P] [US1] Write component test for FolderSelector in `frontend/tests/unit/components/PhotoImport/FolderSelector.test.tsx`
+- [x] T058 [P] [US1] Write component test for PhotoCard in `frontend/tests/unit/components/PhotoList/PhotoCard.test.tsx`
+- [x] T059 [US1] Write integration test for import workflow in `frontend/tests/integration/import-workflow.test.tsx`
 
 **Checkpoint**: User Story 1 is complete and independently testable. A user can import a folder of photos and see extracted GPS data in a list.
 
@@ -139,35 +139,35 @@
 
 ### Data Models for US2
 
-- [ ] T060 [P] [US2] Create GPSLocation model in `backend/src/models/gps_location.py` (latitude, longitude, altitude, uncertainty_radius)
-- [ ] T061 [P] [US2] Create PhotoMarker model in `backend/src/models/photo_marker.py` (location_id FK, photos_count, is_clustered, visible)
+- [x] T060 [P] [US2] Create GPSLocation model in `backend/src/models/gps_location.py` (latitude, longitude, altitude, uncertainty_radius)
+- [x] T061 [P] [US2] Create PhotoMarker model in `backend/src/models/photo_marker.py` (location_id FK, photos_count, is_clustered, visible)
 
 ### Tests for US2 (Test-First)
 
-- [ ] T062 [P] [US2] Write contract test for `/api/v1/locations` GET endpoint in `backend/tests/contract/test_locations.py` - MUST FAIL
-- [ ] T063 [US2] Write integration test for fetching locations for map display in `backend/tests/integration/test_map_display.py` - MUST FAIL
+- [x] T062 [P] [US2] Write contract test for `/api/v1/locations` GET endpoint in `backend/tests/contract/test_locations.py` - MUST FAIL
+- [x] T063 [US2] Write integration test for fetching locations for map display in `backend/tests/integration/test_map_display.py` - MUST FAIL
 
 ### Backend Implementation for US2
 
-- [ ] T064 [US2] Create location endpoints in `backend/src/api/v1/locations.py` (GET /locations, GET /locations/bounds to get map extent)
-- [ ] T065 [US2] Implement location service to query GPS data for map display in `backend/src/services/location_service.py`
-- [ ] T066 [US2] Add location clustering logic for performance (server-side or client-side decision) in `backend/src/utils/clustering.py`
-- [ ] T067 [US2] Add logging and error handling for location queries
+- [x] T064 [US2] Create location endpoints in `backend/src/api/v1/locations.py` (GET /locations, GET /locations/bounds to get map extent)
+- [x] T065 [US2] Implement location service to query GPS data for map display in `backend/src/services/location_service.py`
+- [x] T066 [US2] Add location clustering logic for performance (server-side or client-side decision) in `backend/src/utils/clustering.py`
+- [x] T067 [US2] Add logging and error handling for location queries
 
 ### Frontend Implementation for US2
 
-- [ ] T068 [P] [US2] Create MapContainer component in `frontend/src/components/Map/MapContainer.tsx` using Leaflet
-- [ ] T069 [P] [US2] Create MapMarkers component in `frontend/src/components/Map/MapMarkers.tsx` for marker rendering
-- [ ] T070 [P] [US2] Create MarkerPopup component in `frontend/src/components/Map/MarkerPopup.tsx` for displaying photo details
-- [ ] T071 [P] [US2] Create MapControls component in `frontend/src/components/Map/MapControls.tsx` (zoom, pan buttons)
-- [ ] T072 [US2] Create useMap hook in `frontend/src/hooks/useMap.ts` (manage map state, bounds, center)
-- [ ] T073 [US2] Integrate map into Dashboard page
-- [ ] T074 [US2] Implement error handling for map library failures (graceful fallback to table view)
+- [x] T068 [P] [US2] Create MapContainer component in `frontend/src/components/Map/MapContainer.tsx` using Leaflet
+- [x] T069 [P] [US2] Create MapMarkers component in `frontend/src/components/Map/MapMarkers.tsx` for marker rendering
+- [x] T070 [P] [US2] Create MarkerPopup component in `frontend/src/components/Map/MarkerPopup.tsx` for displaying photo details
+- [x] T071 [P] [US2] Create MapControls component in `frontend/src/components/Map/MapControls.tsx` (zoom, pan buttons)
+- [x] T072 [US2] Create useMap hook in `frontend/src/hooks/useMap.ts` (manage map state, bounds, center)
+- [x] T073 [US2] Integrate map into Dashboard page
+- [x] T074 [US2] Implement error handling for map library failures (graceful fallback to table view)
 
 ### Tests for US2 Frontend
 
-- [ ] T075 [P] [US2] Write component test for MapContainer in `frontend/tests/unit/components/Map/MapContainer.test.tsx`
-- [ ] T076 [P] [US2] Write component test for MarkerPopup in `frontend/tests/unit/components/Map/MarkerPopup.test.tsx`
+- [x] T075 [P] [US2] Write component test for MapContainer in `frontend/tests/unit/components/Map/MapContainer.test.tsx`
+- [x] T076 [P] [US2] Write component test for MarkerPopup in `frontend/tests/unit/components/Map/MarkerPopup.test.tsx`
 - [ ] T077 [US2] Write E2E test for map marker interaction in `frontend/tests/e2e/marker-interaction.spec.ts`
 
 **Checkpoint**: User Stories 1 AND 2 are complete. Users can import photos and see them visualized on an interactive map. Core MVP is functional.
@@ -371,6 +371,19 @@
 - [ ] T176 Code cleanup and refactoring based on learnings
 - [ ] T177 Final code review and quality gate verification
 - [ ] T178 Prepare release notes and version bumps
+
+### Feature Completeness (Notes & Tags)
+
+- [ ] T179 [P] Create Note model and migration in `backend/src/models/note.py`
+- [ ] T180 [P] Implement API endpoints for notes in `backend/src/api/v1/notes.py`
+- [ ] T181 [P] Create UI for adding/viewing notes in `frontend/src/components/Map/NoteInput.tsx`
+- [ ] T182 Integrate notes display into `MarkerPopup` component
+- [ ] T185 Enhance FolderSelector to support multiple folder selection (Batch Import)
+
+### Offline Support
+
+- [ ] T183 Configure Vite PWA plugin for offline support
+- [ ] T184 Implement map tile caching strategy for offline usage
 
 **Checkpoint**: Application is production-ready, fully tested, documented, and optimized.
 

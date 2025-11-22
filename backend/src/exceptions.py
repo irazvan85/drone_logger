@@ -94,3 +94,16 @@ class ProcessingError(AppException):
             error_code: Machine-readable error code
         """
         super().__init__(message, status_code=422, error_code=error_code)
+
+
+class InvalidGPSData(ValidationError):
+    """Raised when GPS data is invalid or missing."""
+
+    def __init__(self, message: str = "Invalid GPS data", error_code: str = "INVALID_GPS_DATA"):
+        """Initialize invalid GPS data error.
+
+        Args:
+            message: Description of the error
+            error_code: Machine-readable error code
+        """
+        super().__init__(message, error_code=error_code)

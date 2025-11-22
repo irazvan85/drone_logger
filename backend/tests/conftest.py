@@ -1,44 +1,77 @@
 """Pytest configuration and fixtures for backend tests."""
+import asyncio
 import os
 from pathlib import Path
+from typing import AsyncGenerator, Generator
 
 import pytest
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+import pytest_asyncio
+from httpx import AsyncClient, ASGITransport
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 
 # Add src to path for imports
 BACKEND_DIR = Path(__file__).parent.parent
 SRC_DIR = BACKEND_DIR / "src"
 os.sys.path.insert(0, str(SRC_DIR))
 
-
-@pytest.fixture(scope="session")
-def test_db_url():
-    """Provide test database URL."""
-    return "sqlite:///:memory:"
+from src.app import app
+from src.db.session import get_db_session
+from src.models.base import Base
 
 
 @pytest.fixture(scope="session")
-def engine(test_db_url):
-    """Create test database engine."""
-    engine = create_engine(test_db_url, connect_args={"check_same_thread": False})
-    return engine
+def event_loop() -> Generator:
+    """Create an instance of the default event loop for each test case."""
+    loop = asyncio.get_event_loop_policy().new_event_loop()
+    yield loop
+    loop.close()
 
 
-@pytest.fixture(scope="session")
-def SessionLocal(engine):
-    """Create sessionmaker for test database."""
-    return sessionmaker(autocommit=False, autoflush=False, bind=engine)
+@pytest_asyncio.fixture(scope="session")
+async def test_db_engine():
+    """Create async test database engine."""
+    engine = create_async_engine(
+        "sqlite+aiosqlite:///:memory:",
+        connect_args={"check_same_thread": False},
+        echo=False,
+    )
+    
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+        
+    yield engine
+    
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+    
+    await engine.dispose()
 
 
-@pytest.fixture
-def db_session(SessionLocal):
-    """Provide database session for test."""
-    session = SessionLocal()
-    try:
+@pytest_asyncio.fixture
+async def db_session(test_db_engine) -> AsyncGenerator[AsyncSession, None]:
+    """Provide async database session for test."""
+    async_session = async_sessionmaker(
+        test_db_engine, class_=AsyncSession, expire_on_commit=False
+    )
+    
+    async with async_session() as session:
         yield session
-    finally:
-        session.close()
+        await session.rollback()
+
+
+@pytest_asyncio.fixture
+async def client(db_session) -> AsyncGenerator[AsyncClient, None]:
+    """Provide async HTTP client for API tests."""
+    
+    async def override_get_db_session():
+        yield db_session
+
+    app.dependency_overrides[get_db_session] = override_get_db_session
+    
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
+        yield ac
+    
+    app.dependency_overrides.clear()
 
 
 @pytest.fixture

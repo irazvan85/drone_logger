@@ -152,7 +152,7 @@ User sees the flight path drawn on the map and views flight statistics (distance
 - **Photo**: Represents an individual drone photo file with properties: filename, file path, timestamp, file size, format (JPEG/PNG/RAW)
 - **PhotoMetadata**: Contains extracted metadata from photo: latitude, longitude, altitude, camera model, ISO, shutter speed, aperture
 - **GPSLocation**: Represents a specific coordinate point: latitude, longitude, altitude, uncertainty radius
-- **Flight**: Represents a collection of photos taken in a single session: start time, end time, total distance, waypoints (ordered GPSLocations)
+- **Flight**: Represents a collection of photos taken in a single session: start time, end time, total distance, waypoints (ordered GPSLocations). **Logic**: A new flight is identified when photos are separated by more than 30 minutes.
 - **Collection**: User-defined grouping of photos and flights: name, creation date, description, total photos count
 - **PhotoMarker**: Visual representation on map: location, associated photo(s), display state (visible, clustered, highlighted)
 
