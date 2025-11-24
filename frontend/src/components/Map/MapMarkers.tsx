@@ -1,9 +1,10 @@
 import React from 'react';
 import { Marker, Popup } from 'react-leaflet';
 import { useQuery } from '@tanstack/react-query';
-import { api } from '../../services/api';
+import { get } from '../../services/api';
 import { MarkerPopup } from './MarkerPopup';
 import L from 'leaflet';
+import { Photo } from '../../types';
 
 // Fix for default marker icon
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -18,17 +19,40 @@ let DefaultIcon = L.icon({
 
 L.Marker.prototype.options.icon = DefaultIcon;
 
-export const MapMarkers: React.FC = () => {
-  const { data: markers } = useQuery({
+interface MapMarkersProps {
+  photos?: Photo[];
+}
+
+export const MapMarkers: React.FC<MapMarkersProps> = ({ photos }) => {
+  const { data: fetchedMarkers } = useQuery({
     queryKey: ['locations'],
-    queryFn: () => api.get('/locations').then(res => res.data),
+    queryFn: () => get<any[]>('/locations').then(res => res.data),
+    enabled: !photos,
   });
 
-  if (!markers) return null;
+  const displayMarkers = React.useMemo(() => {
+    if (photos) {
+      return photos
+        .filter(p => p.metadata_)
+        .map(p => ({
+          id: p.id,
+          location: {
+            latitude: p.metadata_!.latitude,
+            longitude: p.metadata_!.longitude
+          },
+          photos_count: 1,
+          is_clustered: false,
+          photo_ids: [p.id],
+        }));
+    }
+    return fetchedMarkers || [];
+  }, [photos, fetchedMarkers]);
+
+  if (!displayMarkers) return null;
 
   return (
     <>
-      {markers.map((marker: any) => (
+      {displayMarkers.map((marker: any) => (
         <Marker 
           key={marker.id} 
           position={[marker.location.latitude, marker.location.longitude]}

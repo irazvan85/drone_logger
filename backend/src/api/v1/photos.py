@@ -13,6 +13,9 @@ from src.schemas.base import APIResponse
 from src.schemas.photo import PhotoImportRequest, ImportStats, PhotoResponse, PhotoFilterRequest
 from src.services.photo_processor import PhotoProcessor
 from src.utils.file_utils import validate_path
+import logging
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -42,6 +45,7 @@ async def filter_photos(
     db: AsyncSession = Depends(get_db_session)
 ) -> APIResponse[List[PhotoResponse]]:
     """Filter photos by date and location."""
+    logger.info(f"Filtering photos with params: {filter_req}")
     query = select(Photo).options(selectinload(Photo.metadata_))
     
     if filter_req.date_start:

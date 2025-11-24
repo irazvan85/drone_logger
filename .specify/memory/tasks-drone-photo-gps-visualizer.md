@@ -182,32 +182,32 @@
 
 ### Tests for US3 (Test-First)
 
-- [ ] T078 [P] [US3] Write contract test for `/api/v1/photos/filter` POST endpoint in `backend/tests/contract/test_photos.py` - MUST FAIL
-- [ ] T079 [US3] Write unit test for date range filtering in `backend/tests/unit/test_filters.py` - MUST FAIL
-- [ ] T080 [US3] Write unit test for bounding box filtering in `backend/tests/unit/test_filters.py` - MUST FAIL
+- [x] T078 [P] [US3] Write contract test for `/api/v1/photos/filter` POST endpoint in `backend/tests/contract/test_photos.py` - MUST FAIL
+- [x] T079 [US3] Write unit test for date range filtering in `backend/tests/unit/test_filters.py` - MUST FAIL
+- [x] T080 [US3] Write unit test for bounding box filtering in `backend/tests/unit/test_filters.py` - MUST FAIL
 
 ### Backend Implementation for US3
 
-- [ ] T081 [P] [US3] Create filter utilities in `backend/src/utils/filters.py` (filter_by_date_range, filter_by_bounds, apply_filters)
-- [ ] T082 [US3] Add filter endpoint in `backend/src/api/v1/photos.py` (POST /photos/filter with date_start, date_end, bounds)
-- [ ] T083 [US3] Implement filtered location query in location service
-- [ ] T084 [US3] Add logging for filter operations
+- [x] T081 [P] [US3] Create filter utilities in `backend/src/utils/filters.py` (filter_by_date_range, filter_by_bounds, apply_filters)
+- [x] T082 [US3] Add filter endpoint in `backend/src/api/v1/photos.py` (POST /photos/filter with date_start, date_end, bounds)
+- [x] T083 [US3] Implement filtered location query in location service
+- [x] T084 [US3] Add logging for filter operations
 
 ### Frontend Implementation for US3
 
-- [ ] T085 [P] [US3] Create DateRangeFilter component in `frontend/src/components/Filters/DateRangeFilter.tsx`
-- [ ] T086 [P] [US3] Create BoundingBoxFilter component in `frontend/src/components/Filters/BoundingBoxFilter.tsx` (interactive box drawing on map)
-- [ ] T087 [P] [US3] Create FilterPanel component in `frontend/src/components/Filters/FilterPanel.tsx` combining filters
-- [ ] T088 [US3] Create useFilters hook in `frontend/src/hooks/useFilters.ts` (manage filter state, apply filters)
-- [ ] T089 [US3] Integrate FilterPanel into Dashboard
-- [ ] T090 [US3] Implement real-time map updates when filters change
-- [ ] T091 [US3] Add filter reset functionality
+- [x] T085 [P] [US3] Create DateRangeFilter component in `frontend/src/components/Filters/DateRangeFilter.tsx`
+- [x] T086 [P] [US3] Create BoundingBoxFilter component in `frontend/src/components/Filters/BoundingBoxFilter.tsx` (interactive box drawing on map)
+- [x] T087 [P] [US3] Create FilterPanel component in `frontend/src/components/Filters/FilterPanel.tsx` combining filters
+- [x] T088 [US3] Create useFilters hook in `frontend/src/hooks/useFilters.ts` (manage filter state, apply filters)
+- [x] T089 [US3] Integrate FilterPanel into Dashboard
+- [x] T090 [US3] Implement real-time map updates when filters change
+- [x] T091 [US3] Add filter reset functionality
 
 ### Tests for US3 Frontend
 
-- [ ] T092 [P] [US3] Write component test for DateRangeFilter in `frontend/tests/unit/components/Filters/DateRangeFilter.test.tsx`
-- [ ] T093 [P] [US3] Write component test for BoundingBoxFilter in `frontend/tests/unit/components/Filters/BoundingBoxFilter.test.tsx`
-- [ ] T094 [US3] Write integration test for filter workflow in `frontend/tests/integration/filter-workflow.test.tsx`
+- [x] T092 [P] [US3] Write component test for DateRangeFilter in `frontend/tests/unit/components/Filters/DateRangeFilter.test.tsx`
+- [x] T093 [P] [US3] Write component test for BoundingBoxFilter in `frontend/tests/unit/components/Filters/BoundingBoxFilter.test.tsx`
+- [x] T094 [US3] Write integration test for filter workflow in `frontend/tests/integration/filter-workflow.test.tsx`
 
 **Checkpoint**: User Story 3 is complete. Users can filter photos by date and location with real-time visualization.
 

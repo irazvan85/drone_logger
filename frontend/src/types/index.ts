@@ -6,7 +6,7 @@ export interface Photo {
   file_size: number
   format: string
   collection_id: string
-  metadata_id?: string
+  metadata_?: PhotoMetadata
 }
 
 export interface PhotoMetadata {
@@ -64,4 +64,11 @@ export interface ImportResult {
   successful: number
   failed: number
   errors: string[]
+}
+
+export interface ExportRequest {
+  format: "geojson" | "csv" | "kml"
+  photo_ids?: string[]
+  date_start?: string
+  date_end?: string
 }

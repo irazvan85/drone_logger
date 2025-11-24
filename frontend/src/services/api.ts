@@ -154,6 +154,20 @@ export async function upload<T = unknown>(url: string, formData: FormData): Prom
 }
 
 /**
+ * Download file
+ */
+export async function download(url: string, data?: unknown): Promise<Blob> {
+  try {
+    const response = await apiClient.post(url, data, {
+      responseType: "blob",
+    });
+    return response.data;
+  } catch (error) {
+    throw handleAPIError(error);
+  }
+}
+
+/**
  * API error class
  */
 export class APIError extends Error {
