@@ -127,10 +127,10 @@ User sees the flight path drawn on the map and views flight statistics (distance
 - **FR-012**: System MUST display flight statistics including total distance traveled, flight duration, maximum altitude, and average altitude
 - **FR-013**: System MUST handle photos with missing or invalid GPS metadata gracefully with clear error reporting
 - **FR-014**: System MUST detect and handle duplicate photo imports (same file imported multiple times)
-- **FR-015**: System MUST support batch import of photos from multiple folders simultaneously
+- **FR-015**: (Priority: P3) System MUST support batch import of photos from multiple folders simultaneously
 - **FR-016**: System MUST normalize GPS coordinates to WGS84 (latitude/longitude) standard format
 - **FR-017**: System MUST cluster nearby markers on map at zoomed-out levels for performance
-- **FR-018**: System MUST allow users to add notes or tags to specific photo locations
+- **FR-018**: (Priority: P3) System MUST allow users to add notes or tags to specific photo locations
 - **FR-019**: System MUST store import history and allow users to manage multiple photo collections separately
 - **FR-020**: System MUST provide a responsive UI that works on desktop browsers and tablets
 

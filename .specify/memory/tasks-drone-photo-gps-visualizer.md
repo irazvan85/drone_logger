@@ -97,11 +97,13 @@
 - [x] T037 [P] [US1] Write unit test for EXIF extraction in `backend/tests/unit/test_gps_extractor.py` - MUST FAIL
 - [x] T038 [P] [US1] Write unit test for file scanning in `backend/tests/unit/test_photo_processor.py` - MUST FAIL
 - [x] T039 [US1] Write integration test for import workflow (folder → extract → store) in `backend/tests/integration/test_import_workflow.py` - MUST FAIL
+- [ ] T039b [US1] Write test to verify original files are preserved (read-only access) in `backend/tests/unit/test_photo_processor.py`
 
 ### Backend Implementation for US1
 
 - [x] T040 [P] [US1] Implement GPS extractor service in `backend/src/services/gps_extractor.py` (extract_from_photo, normalize_coordinates, validate_gps_data)
 - [x] T041 [P] [US1] Implement photo processor service in `backend/src/services/photo_processor.py` (scan_folder, process_photos, create_photo_records)
+- [ ] T041b [US1] Implement duplicate photo detection logic (hash/metadata check) in `backend/src/services/photo_processor.py`
 - [x] T042 [P] [US1] Implement collection manager service in `backend/src/services/collection_manager.py` (create_collection, get_collection, list_collections)
 - [x] T043 [US1] Create collection endpoints in `backend/src/api/v1/collections.py` (POST /collections, GET /collections, GET /collections/{id})
 - [x] T044 [US1] Create photo endpoints in `backend/src/api/v1/photos.py` (POST /photos/import, GET /photos, GET /photos/{id})
