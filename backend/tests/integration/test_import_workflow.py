@@ -23,9 +23,9 @@ async def test_import_workflow(db_session, tmp_path):
     # 2. Setup Test Photos
     photo_dir = tmp_path / "photos"
     photo_dir.mkdir()
-    (photo_dir / "img1.jpg").touch()
-    (photo_dir / "img2.jpg").touch()
-    
+    (photo_dir / "img1.jpg").write_text("content1")
+    (photo_dir / "img2.jpg").write_text("content2")
+
     # 3. Process Photos (Mock GPS extraction to avoid needing real EXIF data)
     processor = PhotoProcessor(db_session)
     

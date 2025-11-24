@@ -26,6 +26,7 @@ export const FlightStats: React.FC<FlightStatsProps> = ({ filters }) => {
   }
 
   const distanceKm = (stats.total_distance_meters / 1000).toFixed(2);
+  const durationMinutes = Math.round(stats.total_duration_seconds / 60);
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-md">
@@ -39,7 +40,11 @@ export const FlightStats: React.FC<FlightStatsProps> = ({ filters }) => {
           <div className="text-sm text-green-600 font-medium">Total Photos</div>
           <div className="text-2xl font-bold text-green-800">{stats.total_photos}</div>
         </div>
-        <div className="col-span-2 p-3 bg-gray-50 rounded-md">
+        <div className="p-3 bg-purple-50 rounded-md">
+          <div className="text-sm text-purple-600 font-medium">Duration</div>
+          <div className="text-2xl font-bold text-purple-800">{durationMinutes} min</div>
+        </div>
+        <div className="p-3 bg-gray-50 rounded-md">
           <div className="text-sm text-gray-600 font-medium">Date Range</div>
           <div className="text-sm font-semibold text-gray-800">
             {stats.date_start ? new Date(stats.date_start).toLocaleDateString() : 'N/A'} 

@@ -6,11 +6,12 @@ from typing import Dict, List, Generator, Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import select
 
 from src.models.photo import Photo, PhotoMetadata
 from src.services.gps_extractor import GPSExtractor
 from src.services.collection_manager import CollectionManager
-from src.utils.file_utils import scan_directory, get_file_info
+from src.utils.file_utils import scan_directory, get_file_info, calculate_file_hash
 from src.exceptions import InvalidGPSData
 
 logger = logging.getLogger(__name__)
@@ -66,6 +67,7 @@ class PhotoProcessor:
             "total_imported": 0,
             "successful": 0,
             "failed": 0,
+            "duplicates": 0,
             "errors": []
         }
 
@@ -74,6 +76,15 @@ class PhotoProcessor:
                 await self._process_single_photo(file_path, collection_id)
                 stats["successful"] += 1
                 stats["total_imported"] += 1
+            except ValueError as e:
+                if "Duplicate photo" in str(e):
+                    stats["duplicates"] += 1
+                    logger.info(f"Skipping duplicate photo: {file_path.name}")
+                else:
+                    stats["failed"] += 1
+                    error_msg = f"Failed to process {file_path.name}: {str(e)}"
+                    stats["errors"].append(error_msg)
+                    logger.warning(error_msg)
             except Exception as e:
                 stats["failed"] += 1
                 error_msg = f"Failed to process {file_path.name}: {str(e)}"
@@ -102,7 +113,14 @@ class PhotoProcessor:
         # 1. Extract file info
         file_info = get_file_info(file_path)
         
-        # 2. Extract GPS data
+        # 2. Calculate hash and check for duplicates
+        file_hash = calculate_file_hash(file_path)
+        stmt = select(Photo).where(Photo.file_hash == file_hash)
+        result = await self.session.execute(stmt)
+        if result.scalar_one_or_none():
+            raise ValueError("Duplicate photo detected")
+
+        # 3. Extract GPS data
         # We extract GPS data first to fail early if it's missing/invalid
         # (per requirements, we only want photos with GPS data)
         try:
@@ -113,7 +131,7 @@ class PhotoProcessor:
             # Spec says: "System MUST skip the photo and log a warning"
             raise
 
-        # 3. Create Photo record
+        # 4. Create Photo record
         # Use EXIF timestamp if available, else file creation time
         # For now using file creation time as simple fallback
         # TODO: Extract timestamp from EXIF
@@ -122,6 +140,7 @@ class PhotoProcessor:
         photo = Photo(
             filename=file_info["filename"],
             file_path=str(file_path),
+            file_hash=file_hash,
             timestamp=timestamp,
             file_size=file_info["size"],
             format=file_info["extension"].lstrip("."),
@@ -136,7 +155,7 @@ class PhotoProcessor:
             await self.session.rollback()
             raise Exception("Photo already exists in database")
 
-        # 4. Create Metadata record
+        # 5. Create Metadata record
         metadata_obj.photo_id = photo.id
         self.session.add(metadata_obj)
         

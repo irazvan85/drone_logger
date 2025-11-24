@@ -16,33 +16,28 @@ async def export_data(
     request: ExportRequest,
     db: AsyncSession = Depends(get_db_session)
 ):
-    # 1. Fetch photos based on criteria
-    query = select(Photo)
+    from sqlalchemy.orm import selectinload
     
-    # If photo_ids provided, filter by them
+    # 1. Build query with eager loading of metadata
+    query = select(Photo).options(selectinload(Photo.metadata_))
+    
+    # If photo_ids provided, filter by them at DB level
     if request.photo_ids:
         query = query.where(Photo.id.in_(request.photo_ids))
-    else:
-        # Apply date filters if provided
-        # We need to adapt apply_filters or write custom logic here
-        # For now, let's assume simple filtering or fetch all if no ids
-        # Ideally we reuse the filter logic from photos.py
-        pass 
-        # TODO: Integrate with apply_filters properly if needed, 
-        # but for now let's stick to basic ID filtering or all if not specified
-        # (or maybe we should require some filter?)
     
     # Execute query
     result = await db.execute(query)
-    photos = result.scalars().all()
+    photos = list(result.scalars().all())
     
-    # Ensure metadata is loaded (eager loading might be needed or it's lazy loaded)
-    # With AsyncSession, lazy loading attributes fails. We should use select options to join metadata.
-    # Let's update the query to join metadata.
-    from sqlalchemy.orm import selectinload
-    query = query.options(selectinload(Photo.metadata_))
-    result = await db.execute(query)
-    photos = result.scalars().all()
+    # 2. Apply in-memory filters (date range)
+    filters = {}
+    if request.date_start:
+        filters["date_start"] = request.date_start
+    if request.date_end:
+        filters["date_end"] = request.date_end
+        
+    if filters:
+        photos = apply_filters(photos, filters)
 
     service = ExportService()
     

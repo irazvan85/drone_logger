@@ -18,6 +18,7 @@ class Photo(BaseModel):
 
     filename: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
     file_path: Mapped[str] = mapped_column(String(1024), nullable=False, unique=True)
+    file_hash: Mapped[str] = mapped_column(String(64), nullable=False, index=True)  # SHA-256 hash
     timestamp: Mapped[datetime] = mapped_column(DateTime, nullable=False, index=True)
     file_size: Mapped[int] = mapped_column(Integer, nullable=False)  # in bytes
     format: Mapped[str] = mapped_column(String(10), nullable=False)  # jpg, png, etc.

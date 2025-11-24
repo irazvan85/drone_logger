@@ -14,6 +14,7 @@ def test_calculate_stats_empty(flight_service):
     assert stats["total_photos"] == 0
     assert stats["date_start"] is None
     assert stats["date_end"] is None
+    assert stats["total_duration_seconds"] == 0
 
 def test_calculate_stats_single_photo(flight_service):
     photo = Mock(spec=Photo)
@@ -27,6 +28,7 @@ def test_calculate_stats_single_photo(flight_service):
     assert stats["total_photos"] == 1
     assert stats["date_start"] == photo.timestamp
     assert stats["date_end"] == photo.timestamp
+    assert stats["total_duration_seconds"] == 0
 
 def test_calculate_stats_multiple_photos(flight_service):
     # Create 3 photos in a line
@@ -57,6 +59,7 @@ def test_calculate_stats_multiple_photos(flight_service):
     assert stats["total_photos"] == 3
     assert stats["date_start"] == p1.timestamp
     assert stats["date_end"] == p3.timestamp
+    assert stats["total_duration_seconds"] == 120
     
     # Distance should be approx 222km = 222000m
     # Allow some margin for calculation differences

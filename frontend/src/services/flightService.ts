@@ -6,6 +6,7 @@ export interface FlightStats {
   total_photos: number;
   date_start: string | null;
   date_end: string | null;
+  total_duration_seconds: number;
 }
 
 export const getFlightStats = async (filters: FilterState): Promise<FlightStats> => {

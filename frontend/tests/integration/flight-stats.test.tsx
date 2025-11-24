@@ -29,6 +29,7 @@ describe('Flight Stats Integration', () => {
       total_photos: 10,
       date_start: '2023-01-01T10:00:00Z',
       date_end: '2023-01-01T11:00:00Z',
+      total_duration_seconds: 3600, // 1 hour
     };
     
     (api.post as any).mockImplementation((url: string) => {
@@ -49,6 +50,7 @@ describe('Flight Stats Integration', () => {
       expect(screen.getByText('Flight Statistics')).toBeInTheDocument();
       expect(screen.getByText('1.50 km')).toBeInTheDocument(); // 1500m = 1.50km
       expect(screen.getByText('10')).toBeInTheDocument(); // Total photos
+      expect(screen.getByText('60 min')).toBeInTheDocument(); // 3600s = 60min
     });
   });
 });

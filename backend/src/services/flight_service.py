@@ -24,7 +24,8 @@ class FlightService:
                 "total_distance_meters": 0,
                 "total_photos": 0,
                 "date_start": None,
-                "date_end": None
+                "date_end": None,
+                "total_duration_seconds": 0
             }
             
         # Sort photos by time
@@ -45,5 +46,6 @@ class FlightService:
             "total_distance_meters": total_distance_km * 1000,
             "total_photos": len(photos),
             "date_start": sorted_photos[0].timestamp,
-            "date_end": sorted_photos[-1].timestamp
+            "date_end": sorted_photos[-1].timestamp,
+            "total_duration_seconds": (sorted_photos[-1].timestamp - sorted_photos[0].timestamp).total_seconds()
         }
