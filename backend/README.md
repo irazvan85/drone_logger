@@ -2,6 +2,8 @@
 
 FastAPI-based backend for GPS extraction, data processing, and API endpoints.
 
+> **Note**: For Docker deployment, see the [root README](../README.md).
+
 ## Setup
 
 ### Prerequisites

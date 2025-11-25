@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: backend-service
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/src:/app/backend/src
+      - ./backend/app.db:/app/backend/app.db
+      - ./backend/data:/app/backend/data
+    environment:
+      - DATABASE_URL=sqlite+aiosqlite:///./app.db
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: frontend-service
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped

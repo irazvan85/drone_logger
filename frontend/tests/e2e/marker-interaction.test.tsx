@@ -46,7 +46,9 @@ describe('Map Marker Interaction', () => {
       file_size: 1024,
       format: 'jpg',
       collection_id: 'col1',
-      metadata_: {
+      created_at: '2023-01-01T12:00:00Z',
+      updated_at: '2023-01-01T12:00:00Z',
+      metadata: {
         id: 'meta1',
         latitude: 37.7749,
         longitude: -122.4194,
@@ -73,7 +75,7 @@ describe('Map Marker Interaction', () => {
     // In our mock, Popup is always rendered inside Marker
     const popup = screen.getByTestId('marker-popup');
     expect(popup).toBeInTheDocument();
-    
+
     // Check popup content
     expect(screen.getByText('Photo Location')).toBeInTheDocument();
     expect(screen.getByText(/Lat: 37.774900/)).toBeInTheDocument();

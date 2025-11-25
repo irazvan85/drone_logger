@@ -3,40 +3,52 @@ import { useQuery } from "@tanstack/react-query";
 import { photoService } from "../../services/photoService";
 import { collectionService } from "../../services/collectionService";
 
-export const PhotoList: React.FC = () => {
+import { Photo } from "../../types";
+
+interface PhotoListProps {
+  photos?: Photo[];
+}
+
+export const PhotoList: React.FC<PhotoListProps> = ({ photos: externalPhotos }) => {
   const [selectedCollectionId, setSelectedCollectionId] = useState<string>("");
 
   // Fetch collections for filter
   const { data: collections } = useQuery({
     queryKey: ["collections"],
     queryFn: collectionService.getAll,
+    enabled: !externalPhotos, // Only fetch if no external photos provided
   });
 
-  // Fetch photos
-  const { data: photos, isLoading, error } = useQuery({
+  // Fetch photos if not provided externally
+  const { data: fetchedPhotos, isLoading, error } = useQuery({
     queryKey: ["photos", selectedCollectionId],
     queryFn: () => photoService.list(selectedCollectionId || undefined),
+    enabled: !externalPhotos,
   });
 
-  if (isLoading) return <div>Loading photos...</div>;
-  if (error) return <div>Error loading photos: {error.message}</div>;
+  const photos = externalPhotos || fetchedPhotos;
+
+  if (isLoading && !externalPhotos) return <div>Loading photos...</div>;
+  if (error && !externalPhotos) return <div>Error loading photos: {error.message}</div>;
 
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-bold">Photos</h2>
-        <select
-          value={selectedCollectionId}
-          onChange={(e) => setSelectedCollectionId(e.target.value)}
-          className="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
-        >
-          <option value="">All Collections</option>
-          {collections?.map((col) => (
-            <option key={col.id} value={col.id}>
-              {col.name}
-            </option>
-          ))}
-        </select>
+        {!externalPhotos && (
+          <select
+            value={selectedCollectionId}
+            onChange={(e) => setSelectedCollectionId(e.target.value)}
+            className="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+          >
+            <option value="">All Collections</option>
+            {collections?.map((col) => (
+              <option key={col.id} value={col.id}>
+                {col.name}
+              </option>
+            ))}
+          </select>
+        )}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

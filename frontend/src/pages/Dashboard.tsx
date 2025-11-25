@@ -7,9 +7,12 @@ import { ExportDialog } from "../components/Export/ExportDialog";
 import { FlightStats } from "../components/FlightStats/FlightStats";
 import { useFilters } from "../hooks/useFilters";
 
+import { ViewToggle } from "../components/Common/ViewToggle";
+
 export default function Dashboard() {
   const filters = useFilters();
   const [isExportOpen, setIsExportOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<"map" | "list">("map");
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-8">
@@ -26,13 +29,12 @@ export default function Dashboard() {
         </button>
       </header>
 
-      <ExportDialog 
-        isOpen={isExportOpen} 
+      <ExportDialog
+        isOpen={isExportOpen}
         onClose={() => setIsExportOpen(false)}
         filterCriteria={{
           date_start: filters.filters.dateStart ? new Date(filters.filters.dateStart).toISOString() : undefined,
           date_end: filters.filters.dateEnd ? new Date(filters.filters.dateEnd).toISOString() : undefined,
-          // We might need to pass bounds too if backend supports it in export
         }}
       />
 
@@ -45,19 +47,23 @@ export default function Dashboard() {
             <FilterPanel filters={filters} />
           </section>
         </div>
-        
+
         <div className="lg:col-span-3 space-y-6">
-           <FlightStats filters={filters.filters} />
-           <section className="h-full">
-            <h2 className="text-xl font-bold mb-4">Map Visualization</h2>
-            <MapContainer photos={filters.hasFiltered ? filters.filteredPhotos : undefined} />
+          <FlightStats filters={filters.filters} />
+          <section className="h-full">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold">Visualization</h2>
+              <ViewToggle viewMode={viewMode} onChange={setViewMode} />
+            </div>
+
+            {viewMode === "map" ? (
+              <MapContainer photos={filters.hasFiltered ? filters.filteredPhotos : undefined} />
+            ) : (
+              <PhotoList photos={filters.filteredPhotos} />
+            )}
           </section>
         </div>
       </div>
-
-      <section>
-        <PhotoList />
-      </section>
     </div>
   );
 }

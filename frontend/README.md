@@ -2,6 +2,8 @@
 
 React + TypeScript frontend for interactive map visualization of drone photos.
 
+> **Note**: For Docker deployment, see the [root README](../README.md).
+
 ## Setup
 
 ### Prerequisites

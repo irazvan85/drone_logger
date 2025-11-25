@@ -11,10 +11,10 @@ import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 let DefaultIcon = L.icon({
-    iconUrl: icon,
-    shadowUrl: iconShadow,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41]
+  iconUrl: icon,
+  shadowUrl: iconShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41]
 });
 
 L.Marker.prototype.options.icon = DefaultIcon;
@@ -33,12 +33,12 @@ export const MapMarkers: React.FC<MapMarkersProps> = ({ photos }) => {
   const displayMarkers = React.useMemo(() => {
     if (photos) {
       return photos
-        .filter(p => p.metadata_)
+        .filter(p => p.metadata)
         .map(p => ({
           id: p.id,
           location: {
-            latitude: p.metadata_!.latitude,
-            longitude: p.metadata_!.longitude
+            latitude: p.metadata!.latitude,
+            longitude: p.metadata!.longitude
           },
           photos_count: 1,
           is_clustered: false,
@@ -53,8 +53,8 @@ export const MapMarkers: React.FC<MapMarkersProps> = ({ photos }) => {
   return (
     <>
       {displayMarkers.map((marker: any) => (
-        <Marker 
-          key={marker.id} 
+        <Marker
+          key={marker.id}
           position={[marker.location.latitude, marker.location.longitude]}
         >
           <Popup>

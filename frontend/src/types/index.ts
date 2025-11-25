@@ -6,7 +6,9 @@ export interface Photo {
   file_size: number
   format: string
   collection_id: string
-  metadata_?: PhotoMetadata
+  metadata?: PhotoMetadata
+  created_at: string
+  updated_at: string
 }
 
 export interface PhotoMetadata {

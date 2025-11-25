@@ -1,33 +1,12 @@
 import { get, post, APIResponse } from "./api";
-
-export interface PhotoMetadata {
-  latitude: number;
-  longitude: number;
-  altitude?: number;
-  camera_model?: string;
-  iso?: number;
-  shutter_speed?: string;
-  aperture?: string;
-}
-
-export interface Photo {
-  id: string;
-  filename: string;
-  file_path: string;
-  timestamp: string;
-  file_size: number;
-  format: string;
-  collection_id: string;
-  metadata?: PhotoMetadata;
-  created_at: string;
-  updated_at: string;
-}
+import { Photo } from "../types";
 
 export interface ImportStats {
   total_scanned: number;
   total_imported: number;
   successful: number;
   failed: number;
+  duplicates: number;
   errors: string[];
 }
 

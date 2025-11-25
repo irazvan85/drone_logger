@@ -35,7 +35,14 @@ export const PhotoImport: React.FC = () => {
   const importMutation = useMutation({
     mutationFn: (data: ImportRequest) => photoService.importPhotos(data),
     onSuccess: (data) => {
-      alert(`Imported ${data.successful} photos successfully!`);
+      let message = `Imported ${data.successful} photos successfully!`;
+      if (data.duplicates > 0) {
+        message += ` Skipped ${data.duplicates} duplicates.`;
+      }
+      if (data.failed > 0) {
+        message += ` Failed: ${data.failed}.`;
+      }
+      alert(message);
       queryClient.invalidateQueries({ queryKey: ["photos"] });
       queryClient.invalidateQueries({ queryKey: ["collections"] });
     },
@@ -48,8 +55,8 @@ export const PhotoImport: React.FC = () => {
     e.preventDefault();
     // alert(`Creating collection: ${newCollectionName}`); // Debug
     if (!newCollectionName.trim()) {
-        alert("Please enter a collection name");
-        return;
+      alert("Please enter a collection name");
+      return;
     }
     createCollectionMutation.mutate(newCollectionName);
   };
@@ -72,7 +79,7 @@ export const PhotoImport: React.FC = () => {
   return (
     <div className="p-4 border rounded shadow-sm bg-white">
       <h2 className="text-xl font-bold mb-4">Import Photos</h2>
-      
+
       {/* Collection Selection / Creation */}
       <div className="mb-4">
         <div className="flex justify-between items-center mb-1">
