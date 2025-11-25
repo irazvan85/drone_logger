@@ -5,7 +5,8 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.api.v1 import router as v1_router
+from src.api.v1.routes import api_router as v1_router
+from src.config import get_settings
 from src.db.session import dispose_db, init_db
 from src.exceptions_handler import register_exception_handlers
 from src.schemas.base import HealthCheck
@@ -31,18 +32,18 @@ async def lifespan(app: FastAPI):
 
 
 # Create FastAPI app
+settings = get_settings()
 app = FastAPI(
-    title="Drone Photo GPS Visualizer API",
+    title=settings.APP_NAME,
     description="API for importing and visualizing drone photos with GPS coordinates on a map",
-    version="0.1.0",
+    version=settings.APP_VERSION,
     lifespan=lifespan,
 )
 
 # Configure CORS
-cors_origins = os.getenv("CORS_ORIGINS", "http://localhost:5173,http://localhost:3000").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=cors_origins,
+    allow_origins=settings.CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
