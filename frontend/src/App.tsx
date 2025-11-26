@@ -1,23 +1,45 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { QueryClientProvider } from '@tanstack/react-query'
+import { Toaster } from 'react-hot-toast'
 import { queryClient } from './services/queryClient'
 import Dashboard from './pages/Dashboard'
 import ErrorBoundary from './components/Common/ErrorBoundary'
-import ToastProvider from './components/Common/Toast'
 import './App.css'
 
 function App() {
   return (
     <ErrorBoundary>
-      <ToastProvider>
-        <QueryClientProvider client={queryClient}>
-          <Router>
-            <Routes>
-              <Route path="/" element={<Dashboard />} />
-            </Routes>
-          </Router>
-        </QueryClientProvider>
-      </ToastProvider>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+          </Routes>
+        </Router>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: '#363636',
+              color: '#fff',
+            },
+            success: {
+              duration: 3000,
+              iconTheme: {
+                primary: '#4ade80',
+                secondary: '#fff',
+              },
+            },
+            error: {
+              duration: 5000,
+              iconTheme: {
+                primary: '#ef4444',
+                secondary: '#fff',
+              },
+            },
+          }}
+        />
+      </QueryClientProvider>
     </ErrorBoundary>
   )
 }

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import toast from 'react-hot-toast';
 import { collectionService } from "../../services/collectionService";
 import { photoService, ImportRequest } from "../../services/photoService";
 
@@ -24,10 +25,10 @@ export const PhotoImport: React.FC = () => {
       setSelectedCollectionId(newCollection.id);
       setIsCreatingCollection(false);
       setNewCollectionName("");
-      alert(`Collection "${newCollection.name}" created!`);
+      toast.success(`Collection "${newCollection.name}" created!`);
     },
     onError: (error: Error) => {
-      alert(`Failed to create collection: ${error.message}`);
+      toast.error(`Failed to create collection: ${error.message}`);
     },
   });
 
@@ -35,19 +36,33 @@ export const PhotoImport: React.FC = () => {
   const importMutation = useMutation({
     mutationFn: (data: ImportRequest) => photoService.importPhotos(data),
     onSuccess: (data) => {
-      let message = `Imported ${data.successful} photos successfully!`;
-      if (data.duplicates > 0) {
-        message += ` Skipped ${data.duplicates} duplicates.`;
+      if (data.successful > 0) {
+        let message = `✓ Imported ${data.successful} photo${data.successful > 1 ? 's' : ''}`;
+        if (data.duplicates > 0) {
+          message += ` · ${data.duplicates} duplicate${data.duplicates > 1 ? 's' : ''} skipped`;
+        }
+        if (data.failed > 0) {
+          message += ` · ${data.failed} failed`;
+        }
+        toast.success(message, { duration: 5000 });
+      } else if (data.duplicates > 0) {
+        toast(`All ${data.duplicates} photos were duplicates`, {
+          icon: 'ℹ️',
+          style: {
+            background: '#3b82f6',
+            color: '#fff',
+          },
+        });
+      } else {
+        toast.error('No photos found with GPS metadata');
       }
-      if (data.failed > 0) {
-        message += ` Failed: ${data.failed}.`;
-      }
-      alert(message);
       queryClient.invalidateQueries({ queryKey: ["photos"] });
       queryClient.invalidateQueries({ queryKey: ["collections"] });
+      queryClient.invalidateQueries({ queryKey: ["locations"] });
+      setFolderPath('');
     },
     onError: (error: Error) => {
-      alert(`Import failed: ${error.message}`);
+      toast.error(`Import failed: ${error.message}`);
     },
   });
 

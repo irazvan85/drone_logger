@@ -26,7 +26,11 @@ interface MapMarkersProps {
 export const MapMarkers: React.FC<MapMarkersProps> = ({ photos }) => {
   const { data: fetchedMarkers } = useQuery({
     queryKey: ['locations'],
-    queryFn: () => get<any[]>('/locations').then(res => res.data),
+    queryFn: async () => {
+      const response = await get<any[]>('/locations');
+      // Backend returns array directly, not wrapped in APIResponse
+      return Array.isArray(response) ? response : (response.data || []);
+    },
     enabled: !photos,
   });
 
