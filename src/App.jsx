@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Map from './components/Map';
 import Uploader from './components/Uploader';
 import PhotoModal from './components/PhotoModal';
-import { savePhoto, getPhotos, deletePhoto } from './db';
+import Settings from './components/Settings';
+import { savePhoto, getPhotos, deletePhoto, deleteAll } from './db';
 import { geocodeLocation, calculateDistance } from './geocoding';
 import './App.css';
 
@@ -17,6 +18,7 @@ function App() {
   const [searchRadius, setSearchRadius] = useState('10');
   const [searchCoords, setSearchCoords] = useState(null);
   const [isGeocoding, setIsGeocoding] = useState(false);
+  const [currentView, setCurrentView] = useState('map'); // 'map' or 'settings'
 
   useEffect(() => {
     getPhotos().then(setPhotos);
@@ -64,6 +66,12 @@ function App() {
     setLocationSearch('');
     setSearchCoords(null);
     setSearchRadius('10');
+  };
+
+  const handleDeleteAll = async () => {
+    await deleteAll();
+    setPhotos([]);
+    setSelectedPhoto(null);
   };
 
   // Filter photos based on all criteria
@@ -114,107 +122,133 @@ function App() {
 
   return (
     <div className="app-container">
-      <div className="map-wrapper">
-        <Map photos={filteredPhotos} onPhotoSelect={setSelectedPhoto} onDeletePhoto={handleDeletePhoto} />
-      </div>
-      <div className="controls-overlay">
-        <h1 className="app-title">Drone Photo Mapper</h1>
-        <Uploader onPhotosProcessed={handlePhotosProcessed} />
-
-        <div className="search-container">
-          <input
-            type="text"
-            placeholder="Search photos..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="search-input"
-          />
-          {searchQuery && (
-            <button onClick={() => setSearchQuery('')} className="clear-btn">×</button>
-          )}
-        </div>
-
-        <button
-          className="advanced-toggle"
-          onClick={() => setShowAdvanced(!showAdvanced)}
-        >
-          {showAdvanced ? '▼' : '▶'} Advanced Filters
-        </button>
-
-        {showAdvanced && (
-          <div className="advanced-filters">
-            <div className="filter-group">
-              <label className="filter-label">Altitude (m)</label>
-              <div className="range-inputs">
-                <input
-                  type="number"
-                  placeholder="Min"
-                  value={altitudeMin}
-                  onChange={(e) => setAltitudeMin(e.target.value)}
-                  className="range-input"
-                />
-                <span>-</span>
-                <input
-                  type="number"
-                  placeholder="Max"
-                  value={altitudeMax}
-                  onChange={(e) => setAltitudeMax(e.target.value)}
-                  className="range-input"
-                />
-              </div>
+      {currentView === 'map' ? (
+        <>
+          <div className="map-wrapper">
+            <Map photos={filteredPhotos} onPhotoSelect={setSelectedPhoto} onDeletePhoto={handleDeletePhoto} />
+          </div>
+          <div className="controls-overlay">
+            <div className="view-toggle">
+              <button
+                className="view-toggle-btn active"
+                onClick={() => setCurrentView('map')}
+              >
+                🗺️ Map
+              </button>
+              <button
+                className="view-toggle-btn"
+                onClick={() => setCurrentView('settings')}
+              >
+                ⚙️ Settings
+              </button>
             </div>
 
-            <div className="filter-group">
-              <label className="filter-label">Location</label>
-              <div className="location-search">
-                <input
-                  type="text"
-                  placeholder="City, region, country..."
-                  value={locationSearch}
-                  onChange={(e) => setLocationSearch(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleLocationSearch()}
-                  className="filter-input"
-                />
-                <button
-                  onClick={handleLocationSearch}
-                  className="search-location-btn"
-                  disabled={isGeocoding}
-                >
-                  {isGeocoding ? '...' : '🔍'}
-                </button>
-              </div>
-              {searchCoords && (
-                <div className="location-result">
-                  📍 {searchCoords.displayName}
-                </div>
+            <h1 className="app-title">Drone Photo Mapper</h1>
+            <Uploader onPhotosProcessed={handlePhotosProcessed} />
+
+            <div className="search-container">
+              <input
+                type="text"
+                placeholder="Search photos..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="search-input"
+              />
+              {searchQuery && (
+                <button onClick={() => setSearchQuery('')} className="clear-btn">×</button>
               )}
             </div>
 
-            <div className="filter-group">
-              <label className="filter-label">Radius (km)</label>
-              <input
-                type="number"
-                placeholder="10"
-                value={searchRadius}
-                onChange={(e) => setSearchRadius(e.target.value)}
-                className="filter-input"
-                min="0.1"
-                step="0.1"
-              />
-            </div>
+            <button
+              className="advanced-toggle"
+              onClick={() => setShowAdvanced(!showAdvanced)}
+            >
+              {showAdvanced ? '▼' : '▶'} Advanced Filters
+            </button>
 
-            {(searchQuery || altitudeMin || altitudeMax || searchCoords) && (
-              <button onClick={clearFilters} className="clear-all-btn">
-                Clear All Filters
-              </button>
+            {showAdvanced && (
+              <div className="advanced-filters">
+                <div className="filter-group">
+                  <label className="filter-label">Altitude (m)</label>
+                  <div className="range-inputs">
+                    <input
+                      type="number"
+                      placeholder="Min"
+                      value={altitudeMin}
+                      onChange={(e) => setAltitudeMin(e.target.value)}
+                      className="range-input"
+                    />
+                    <span>-</span>
+                    <input
+                      type="number"
+                      placeholder="Max"
+                      value={altitudeMax}
+                      onChange={(e) => setAltitudeMax(e.target.value)}
+                      className="range-input"
+                    />
+                  </div>
+                </div>
+
+                <div className="filter-group">
+                  <label className="filter-label">Location</label>
+                  <div className="location-search">
+                    <input
+                      type="text"
+                      placeholder="City, region, country..."
+                      value={locationSearch}
+                      onChange={(e) => setLocationSearch(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && handleLocationSearch()}
+                      className="filter-input"
+                    />
+                    <button
+                      onClick={handleLocationSearch}
+                      className="search-location-btn"
+                      disabled={isGeocoding}
+                    >
+                      {isGeocoding ? '...' : '🔍'}
+                    </button>
+                  </div>
+                  {searchCoords && (
+                    <div className="location-result">
+                      📍 {searchCoords.displayName}
+                    </div>
+                  )}
+                </div>
+
+                <div className="filter-group">
+                  <label className="filter-label">Radius (km)</label>
+                  <input
+                    type="number"
+                    placeholder="10"
+                    value={searchRadius}
+                    onChange={(e) => setSearchRadius(e.target.value)}
+                    className="filter-input"
+                    min="0.1"
+                    step="0.1"
+                  />
+                </div>
+
+                {(searchQuery || altitudeMin || altitudeMax || searchCoords) && (
+                  <button onClick={clearFilters} className="clear-all-btn">
+                    Clear All Filters
+                  </button>
+                )}
+              </div>
             )}
-          </div>
-        )}
 
-        <div className="stats">
-          {filteredPhotos.length} of {photos.length} photos
-        </div>
-      </div>
+            <div className="stats">
+              {filteredPhotos.length} of {photos.length} photos
+            </div>
+          </div>
+        </>
+      ) : (
+        <Settings
+          photos={photos}
+          onDeletePhoto={handleDeletePhoto}
+          onDeleteAll={handleDeleteAll}
+          onClose={() => setCurrentView('map')}
+        />
+      )}
       <PhotoModal photo={selectedPhoto} onClose={() => setSelectedPhoto(null)} onDelete={() => handleDeletePhoto(selectedPhoto)} />
     </div>
   );

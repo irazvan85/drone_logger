@@ -32,3 +32,8 @@ export async function deletePhoto(id) {
     const db = await dbPromise;
     return db.delete(STORE_NAME, id);
 }
+
+export async function deleteAll() {
+    const db = await dbPromise;
+    return db.clear(STORE_NAME);
+}
