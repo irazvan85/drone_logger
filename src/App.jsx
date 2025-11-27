@@ -3,7 +3,7 @@ import Map from './components/Map';
 import Uploader from './components/Uploader';
 import PhotoModal from './components/PhotoModal';
 import Settings from './components/Settings';
-import { savePhoto, getPhotos, deletePhoto, deleteAll } from './db';
+import { savePhoto, getPhotos, deletePhoto, deleteAll, verifyPermission } from './db';
 import { geocodeLocation, calculateDistance } from './geocoding';
 import './App.css';
 
@@ -19,10 +19,32 @@ function App() {
   const [searchCoords, setSearchCoords] = useState(null);
   const [isGeocoding, setIsGeocoding] = useState(false);
   const [currentView, setCurrentView] = useState('map'); // 'map' or 'settings'
+  const [needsPermission, setNeedsPermission] = useState(false);
 
   useEffect(() => {
-    getPhotos().then(setPhotos);
+    loadPhotos();
   }, []);
+
+  const loadPhotos = async () => {
+    const loadedPhotos = await getPhotos();
+    setPhotos(loadedPhotos);
+
+    // Check if any photos need permission
+    const pending = loadedPhotos.some(p => p.permissionGranted === false);
+    setNeedsPermission(pending);
+  };
+
+  const handleVerifyPermissions = async () => {
+    const updatedPhotos = await Promise.all(photos.map(async (photo) => {
+      if (photo.permissionGranted === false) {
+        return await verifyPermission(photo);
+      }
+      return photo;
+    }));
+
+    setPhotos(updatedPhotos);
+    setNeedsPermission(updatedPhotos.some(p => p.permissionGranted === false));
+  };
 
   const handlePhotosProcessed = async (newPhotos) => {
     for (const photo of newPhotos) {
@@ -122,6 +144,14 @@ function App() {
 
   return (
     <div className="app-container">
+      {needsPermission && (
+        <div className="permission-banner">
+          <span>⚠️ Some photos need permission to be displayed.</span>
+          <button onClick={handleVerifyPermissions} className="verify-btn">
+            Verify Permissions
+          </button>
+        </div>
+      )}
       {currentView === 'map' ? (
         <>
           <div className="map-wrapper">

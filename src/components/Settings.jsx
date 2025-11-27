@@ -7,6 +7,15 @@ export default function Settings({ photos, onDeletePhoto, onDeleteAll, onClose }
         }
     };
 
+    const getTotalSize = () => {
+        const totalBytes = photos.reduce((acc, photo) => acc + (photo.size || 0), 0);
+        if (totalBytes === 0) return '0 B';
+        const k = 1024;
+        const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+        const i = Math.floor(Math.log(totalBytes) / Math.log(k));
+        return parseFloat((totalBytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    };
+
     return (
         <div className="settings-container">
             <div className="settings-header">
@@ -23,7 +32,10 @@ export default function Settings({ photos, onDeletePhoto, onDeleteAll, onClose }
                 ) : (
                     <>
                         <div className="settings-actions">
-                            <div className="photo-count">{photos.length} photo{photos.length !== 1 ? 's' : ''}</div>
+                            <div className="photo-stats">
+                                <div className="photo-count">{photos.length} photo{photos.length !== 1 ? 's' : ''}</div>
+                                <div className="total-size">Total Size: {getTotalSize()}</div>
+                            </div>
                             <button onClick={handleDeleteAll} className="delete-all-btn">
                                 Delete All Photos
                             </button>
@@ -33,7 +45,13 @@ export default function Settings({ photos, onDeletePhoto, onDeleteAll, onClose }
                             {photos.map((photo) => (
                                 <div key={photo.id} className="photo-item">
                                     <div className="photo-thumbnail">
-                                        <img src={photo.url} alt={photo.id} />
+                                        {photo.url ? (
+                                            <img src={photo.url} alt={photo.id} />
+                                        ) : (
+                                            <div className="no-image-placeholder">
+                                                {photo.permissionGranted === false ? '🔒' : '📷'}
+                                            </div>
+                                        )}
                                     </div>
                                     <div className="photo-details">
                                         <div className="photo-name">{photo.id.substring(0, photo.id.lastIndexOf('.'))}</div>
@@ -60,6 +78,11 @@ export default function Settings({ photos, onDeletePhoto, onDeleteAll, onClose }
                                                 <span className="info-label">Camera:</span>
                                                 <span className="info-value">{photo.make} {photo.model}</span>
                                             </div>
+                                            {photo.permissionGranted === false && (
+                                                <div className="permission-warning">
+                                                    ⚠️ Permission needed to view image
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                     <button
