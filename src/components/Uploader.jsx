@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import React, { useState } from 'react';
+
 import exifr from 'exifr';
 import { getLocationName, delay } from '../geocoding';
 
