@@ -55,6 +55,8 @@ export default function Uploader({ onPhotosProcessed }) {
                         processedPhotos.push({
                             id: file.name + '-' + Date.now(), // Ensure unique ID
                             handle: handle, // Store the file handle
+                            url: URL.createObjectURL(file), // Create URL for immediate display
+                            permissionGranted: true, // We just imported it, so we have permission
                             lat: exifData.latitude,
                             lng: exifData.longitude,
                             altitude: altitude,
