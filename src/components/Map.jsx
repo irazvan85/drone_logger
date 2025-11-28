@@ -16,30 +16,25 @@ let DefaultIcon = L.icon({
 
 L.Marker.prototype.options.icon = DefaultIcon;
 
-function MapUpdater({ center }) {
-  const map = useMap();
-  useEffect(() => {
-    if (center) {
-      map.setView(center, map.getZoom());
-    }
-  }, [center, map]);
-  return null;
-}
 
 function FitBounds({ markers }) {
   const map = useMap();
+
   useEffect(() => {
     if (markers.length > 0) {
       const bounds = L.latLngBounds(markers.map(m => [m.lat, m.lng]));
       map.fitBounds(bounds, { padding: [50, 50] });
     }
   }, [markers, map]);
+
   return null;
 }
 
 export default function Map({ photos, onPhotoSelect, onDeletePhoto }) {
   const defaultCenter = [51.505, -0.09]; // Default to London
 
+  console.log('Map rendering with photos:', photos.length);
+  console.log('Sample photo:', photos[0]);
   return (
     <MapContainer center={defaultCenter} zoom={13} style={{ height: '100%', width: '100%' }}>
       <LayersControl position="bottomright">
