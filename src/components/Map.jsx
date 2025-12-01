@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap, LayersControl } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap, LayersControl, Polyline } from 'react-leaflet';
 import LocateControl from './LocateControl';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -20,18 +20,25 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 function FitBounds({ markers }) {
   const map = useMap();
+  const [prevMarkerIds, setPrevMarkerIds] = React.useState('');
 
   useEffect(() => {
     if (markers.length > 0) {
-      const bounds = L.latLngBounds(markers.map(m => [m.lat, m.lng]));
-      map.fitBounds(bounds, { padding: [50, 50] });
+      // Create a stable key from marker IDs to detect actual content changes
+      const currentMarkerIds = markers.map(m => m.id).sort().join(',');
+
+      if (currentMarkerIds !== prevMarkerIds) {
+        const bounds = L.latLngBounds(markers.map(m => [m.lat, m.lng]));
+        map.fitBounds(bounds, { padding: [50, 50] });
+        setPrevMarkerIds(currentMarkerIds);
+      }
     }
-  }, [markers, map]);
+  }, [markers, map, prevMarkerIds]);
 
   return null;
 }
 
-export default function Map({ photos, onPhotoSelect, onDeletePhoto }) {
+export default function Map({ photos, onPhotoSelect, onDeletePhoto, dronePaths, showPaths }) {
   const defaultCenter = [51.505, -0.09]; // Default to London
 
   console.log('Map rendering with photos:', photos.length);
@@ -58,6 +65,14 @@ export default function Map({ photos, onPhotoSelect, onDeletePhoto }) {
           />
         </LayersControl.BaseLayer>
       </LayersControl>
+
+      {showPaths && dronePaths.map((path, index) => (
+        <Polyline
+          key={`path-${index}`}
+          positions={path}
+          pathOptions={{ color: 'blue', weight: 3, opacity: 0.7, dashArray: '10, 10' }}
+        />
+      ))}
 
       {photos.map((photo) => (
         <Marker key={photo.id} position={[photo.lat, photo.lng]}>

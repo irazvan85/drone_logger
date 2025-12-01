@@ -12,7 +12,9 @@ export default function FilterControls({
     isGeocoding,
     clearFilters,
     filteredCount,
-    totalCount
+    totalCount,
+    showPaths,
+    setShowPaths
 }) {
     return (
         <>
@@ -96,6 +98,17 @@ export default function FilterControls({
                             min="0.1"
                             step="0.1"
                         />
+                    </div>
+
+                    <div className="filter-group">
+                        <label className="filter-label" style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                            <input
+                                type="checkbox"
+                                checked={showPaths}
+                                onChange={(e) => setShowPaths(e.target.checked)}
+                            />
+                            Show Drone Paths
+                        </label>
                     </div>
 
                     {(searchQuery || altitudeMin || altitudeMax || searchCoords) && (

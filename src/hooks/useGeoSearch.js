@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { geocodeLocation, calculateDistance } from '../geocoding';
 
 export function useGeoSearch() {
@@ -10,7 +10,7 @@ export function useGeoSearch() {
     const [altitudeMin, setAltitudeMin] = useState('');
     const [altitudeMax, setAltitudeMax] = useState('');
 
-    const handleLocationSearch = async () => {
+    const handleLocationSearch = useCallback(async () => {
         if (!locationSearch.trim()) {
             setSearchCoords(null);
             return;
@@ -26,18 +26,18 @@ export function useGeoSearch() {
             alert(`Could not find location: ${locationSearch}`);
             setSearchCoords(null);
         }
-    };
+    }, [locationSearch]);
 
-    const clearFilters = () => {
+    const clearFilters = useCallback(() => {
         setSearchQuery('');
         setAltitudeMin('');
         setAltitudeMax('');
         setLocationSearch('');
         setSearchCoords(null);
         setSearchRadius('10');
-    };
+    }, []);
 
-    const filterPhotos = (photos) => {
+    const filterPhotos = useCallback((photos) => {
         return photos.filter(photo => {
             // Text search
             if (searchQuery.trim()) {
@@ -82,7 +82,7 @@ export function useGeoSearch() {
 
             return true;
         });
-    };
+    }, [searchQuery, altitudeMin, altitudeMax, searchCoords, searchRadius]);
 
     return {
         searchQuery, setSearchQuery,

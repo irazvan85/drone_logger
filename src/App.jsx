@@ -7,6 +7,7 @@ import Settings from './components/Settings';
 import FilterControls from './components/FilterControls';
 import { usePhotoLibrary } from './hooks/usePhotoLibrary';
 import { useGeoSearch } from './hooks/useGeoSearch';
+import { calculateDronePaths } from './utils/dronePaths';
 
 function App() {
   const {
@@ -53,6 +54,16 @@ function App() {
     return filterPhotos(photos);
   }, [photos, filterPhotos]);
 
+  const [showPaths, setShowPaths] = useState(false);
+
+  const dronePaths = React.useMemo(() => {
+    if (!showPaths) return [];
+    // Calculate paths based on ALL photos to show complete flight history,
+    // or use filteredPhotos if you only want to see paths for currently visible photos.
+    // Using filteredPhotos makes more sense for "drilling down" into specific dates/locations.
+    return calculateDronePaths(filteredPhotos);
+  }, [filteredPhotos, showPaths]);
+
   return (
     <div className="app-container">
       {needsPermission && (
@@ -66,7 +77,13 @@ function App() {
       {currentView === 'map' ? (
         <>
           <div className="map-wrapper">
-            <Map photos={filteredPhotos} onPhotoSelect={setSelectedPhoto} onDeletePhoto={handleDeletePhoto} />
+            <Map
+              photos={filteredPhotos}
+              onPhotoSelect={setSelectedPhoto}
+              onDeletePhoto={handleDeletePhoto}
+              dronePaths={dronePaths}
+              showPaths={showPaths}
+            />
           </div>
           <div className="controls-overlay">
             <div className="view-toggle">
@@ -106,6 +123,8 @@ function App() {
               clearFilters={clearFilters}
               filteredCount={filteredPhotos.length}
               totalCount={photos.length}
+              showPaths={showPaths}
+              setShowPaths={setShowPaths}
             />
           </div>
         </>
