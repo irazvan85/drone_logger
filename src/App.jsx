@@ -117,7 +117,13 @@ function App() {
           onClose={() => setCurrentView('map')}
         />
       )}
-      <PhotoModal photo={selectedPhoto} onClose={() => setSelectedPhoto(null)} onDelete={() => handleDeletePhoto(selectedPhoto)} />
+      <PhotoModal
+        photo={selectedPhoto}
+        photos={filteredPhotos}
+        onSelectPhoto={setSelectedPhoto}
+        onClose={() => setSelectedPhoto(null)}
+        onDelete={() => handleDeletePhoto(selectedPhoto)}
+      />
     </div>
   );
 }

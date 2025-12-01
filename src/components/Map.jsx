@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap, LayersControl } from 'react-leaflet';
+import LocateControl from './LocateControl';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
@@ -104,6 +105,7 @@ export default function Map({ photos, onPhotoSelect, onDeletePhoto }) {
         </Marker>
       ))}
       <FitBounds markers={photos} />
+      <LocateControl />
     </MapContainer>
   );
 }

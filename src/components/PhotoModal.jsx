@@ -1,12 +1,81 @@
-import React from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { calculateDistance } from '../geocoding';
 
-export default function PhotoModal({ photo, onClose, onDelete }) {
+export default function PhotoModal({ photo, photos, onSelectPhoto, onClose, onDelete }) {
+    const [radius, setRadius] = useState(500); // Default 500m
+    const [anchorPhoto, setAnchorPhoto] = useState(null);
+
+    // Set anchor photo when modal opens with a new photo (not during navigation)
+    useEffect(() => {
+        if (photo && !anchorPhoto) {
+            setAnchorPhoto(photo);
+        } else if (!photo) {
+            setAnchorPhoto(null);
+        }
+    }, [photo, anchorPhoto]);
+
+    // Filter photos within radius of anchor
+    const nearbyPhotos = useMemo(() => {
+        if (!anchorPhoto || !photos) return [];
+        return photos.filter(p => {
+            const dist = calculateDistance(anchorPhoto.lat, anchorPhoto.lng, p.lat, p.lng);
+            return dist * 1000 <= radius; // Convert km to m
+        });
+    }, [anchorPhoto, photos, radius]);
+
+    const currentIndex = nearbyPhotos.findIndex(p => p.id === photo?.id);
+    const hasNext = currentIndex < nearbyPhotos.length - 1;
+    const hasPrev = currentIndex > 0;
+
+    const handleNext = (e) => {
+        e.stopPropagation();
+        if (hasNext) onSelectPhoto(nearbyPhotos[currentIndex + 1]);
+    };
+
+    const handlePrev = (e) => {
+        e.stopPropagation();
+        if (hasPrev) onSelectPhoto(nearbyPhotos[currentIndex - 1]);
+    };
+
     if (!photo) return null;
 
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div className="modal-content" onClick={e => e.stopPropagation()}>
-                <button className="close-btn" onClick={onClose}>&times;</button>
+                <div className="modal-header">
+                    <div className="nav-controls">
+                        <button
+                            className="nav-btn"
+                            disabled={!hasPrev}
+                            onClick={handlePrev}
+                        >
+                            &larr; Prev
+                        </button>
+                        <div className="radius-control">
+                            <span className="radius-label">Radius: {radius}m</span>
+                            <input
+                                type="range"
+                                min="100"
+                                max="5000"
+                                step="100"
+                                value={radius}
+                                onChange={(e) => setRadius(Number(e.target.value))}
+                            />
+                            <span className="count-label">
+                                {currentIndex + 1} / {nearbyPhotos.length}
+                            </span>
+                        </div>
+                        <button
+                            className="nav-btn"
+                            disabled={!hasNext}
+                            onClick={handleNext}
+                        >
+                            Next &rarr;
+                        </button>
+                    </div>
+                    <button className="close-btn-header" onClick={onClose}>&times;</button>
+                </div>
+
                 <div className="image-container">
                     {photo.url ? (
                         <img src={photo.url} alt="Full size" />
