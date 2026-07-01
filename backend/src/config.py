@@ -29,6 +29,10 @@ class Settings(BaseSettings):
 
     # File System
     MAX_UPLOAD_SIZE: int = 50 * 1024 * 1024  # 50 MB
+    # When set, photo imports are restricted to paths inside this directory.
+    # Leave unset to allow importing from anywhere the server can read
+    # (only safe for single-user, local deployments).
+    ALLOWED_IMPORT_ROOT: str | None = None
 
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=True, extra="ignore")
 

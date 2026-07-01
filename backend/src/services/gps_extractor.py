@@ -1,5 +1,6 @@
 """GPS extraction service for processing photo metadata."""
 import logging
+from datetime import datetime
 from pathlib import Path
 from typing import Optional, Tuple, Dict, Any
 
@@ -10,6 +11,9 @@ from src.exceptions import InvalidGPSData
 from src.models.photo import PhotoMetadata
 
 logger = logging.getLogger(__name__)
+
+# EXIF datetime format, e.g. "2023:06:15 14:30:00"
+EXIF_DATETIME_FORMAT = "%Y:%m:%d %H:%M:%S"
 
 
 class GPSExtractor:
@@ -99,6 +103,41 @@ class GPSExtractor:
                 raise
             logger.error(f"Error parsing GPS data for {file_path}: {e}")
             raise InvalidGPSData(f"Failed to parse GPS data: {e}")
+
+    def extract_timestamp(self, file_path: Path) -> Optional[datetime]:
+        """Extract the capture timestamp from EXIF data.
+
+        Tries DateTimeOriginal (capture time), then DateTimeDigitized,
+        then the 0th IFD DateTime tag.
+
+        Args:
+            file_path: Path to the image file
+
+        Returns:
+            Capture datetime, or None if no EXIF timestamp is present
+        """
+        try:
+            exif_dict = piexif.load(str(file_path))
+        except Exception as e:
+            logger.warning(f"Failed to load EXIF data from {file_path}: {e}")
+            return None
+
+        candidates = [
+            exif_dict.get("Exif", {}).get(piexif.ExifIFD.DateTimeOriginal),
+            exif_dict.get("Exif", {}).get(piexif.ExifIFD.DateTimeDigitized),
+            exif_dict.get("0th", {}).get(piexif.ImageIFD.DateTime),
+        ]
+
+        for raw in candidates:
+            if not raw:
+                continue
+            try:
+                value = raw.decode("ascii") if isinstance(raw, bytes) else str(raw)
+                return datetime.strptime(value.strip(), EXIF_DATETIME_FORMAT)
+            except (ValueError, UnicodeDecodeError) as e:
+                logger.debug(f"Could not parse EXIF timestamp {raw!r} from {file_path.name}: {e}")
+
+        return None
 
     def _convert_to_degrees(self, value: Tuple[Tuple[int, int], Tuple[int, int], Tuple[int, int]]) -> Optional[float]:
         """Convert GPS coordinates to decimal degrees."""

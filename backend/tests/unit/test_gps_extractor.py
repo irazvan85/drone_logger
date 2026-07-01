@@ -54,6 +54,47 @@ def test_extract_gps_data_invalid_coords(gps_extractor):
                 4: ((0, 1), (0, 1), (0, 1))
             }
         }
-        
+
         with pytest.raises(InvalidGPSData):
             gps_extractor.extract(Path("invalid.jpg"))
+
+
+def test_extract_timestamp_from_datetime_original(gps_extractor):
+    """DateTimeOriginal is parsed into a datetime."""
+    import piexif
+    from datetime import datetime
+
+    with patch("piexif.load") as mock_load:
+        mock_load.return_value = {
+            "Exif": {piexif.ExifIFD.DateTimeOriginal: b"2023:06:15 14:30:00"}
+        }
+
+        result = gps_extractor.extract_timestamp(Path("test.jpg"))
+
+        assert result == datetime(2023, 6, 15, 14, 30, 0)
+
+
+def test_extract_timestamp_falls_back_to_ifd0_datetime(gps_extractor):
+    """The 0th IFD DateTime tag is used when Exif tags are missing."""
+    import piexif
+    from datetime import datetime
+
+    with patch("piexif.load") as mock_load:
+        mock_load.return_value = {
+            "0th": {piexif.ImageIFD.DateTime: b"2022:01:02 03:04:05"}
+        }
+
+        result = gps_extractor.extract_timestamp(Path("test.jpg"))
+
+        assert result == datetime(2022, 1, 2, 3, 4, 5)
+
+
+def test_extract_timestamp_missing_returns_none(gps_extractor):
+    """Missing or unreadable EXIF timestamps return None."""
+    with patch("piexif.load") as mock_load:
+        mock_load.return_value = {}
+        assert gps_extractor.extract_timestamp(Path("test.jpg")) is None
+
+    with patch("piexif.load") as mock_load:
+        mock_load.side_effect = Exception("not an image")
+        assert gps_extractor.extract_timestamp(Path("test.txt")) is None

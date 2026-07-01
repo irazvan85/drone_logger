@@ -55,7 +55,6 @@ export function clear(): void {
  * Storage keys constants
  */
 export const STORAGE_KEYS = {
-  AUTH_TOKEN: "authToken",
   USER_PREFERENCES: "userPreferences",
   THEME: "theme",
   RECENT_COLLECTIONS: "recentCollections",

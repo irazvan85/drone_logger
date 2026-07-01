@@ -7,6 +7,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
+from src.config import get_settings
 from src.db.session import get_db_session
 from src.models.photo import Photo, PhotoMetadata
 from src.schemas.base import APIResponse
@@ -28,8 +29,11 @@ async def import_photos(
     """Import photos from a folder."""
     processor = PhotoProcessor(db)
     
-    # Validate path
-    folder_path = validate_path(import_req.folder_path)
+    # Validate path (restricted to ALLOWED_IMPORT_ROOT when configured)
+    folder_path = validate_path(
+        import_req.folder_path,
+        allowed_root=get_settings().ALLOWED_IMPORT_ROOT,
+    )
     
     stats = await processor.process_folder(
         folder_path=folder_path,

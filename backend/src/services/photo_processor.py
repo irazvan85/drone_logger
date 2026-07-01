@@ -132,10 +132,12 @@ class PhotoProcessor:
             raise
 
         # 4. Create Photo record
-        # Use EXIF timestamp if available, else file creation time
-        # For now using file creation time as simple fallback
-        # TODO: Extract timestamp from EXIF
-        timestamp = datetime.fromtimestamp(file_info["created_at"])
+        # Prefer the EXIF capture time; filesystem times are unreliable
+        # (reset by copies/moves) and only used as a last resort.
+        timestamp = self.gps_extractor.extract_timestamp(file_path)
+        if timestamp is None:
+            timestamp = datetime.fromtimestamp(file_info["created_at"])
+            logger.info(f"No EXIF timestamp in {file_path.name}, falling back to file time")
 
         photo = Photo(
             filename=file_info["filename"],

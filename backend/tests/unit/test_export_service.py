@@ -52,9 +52,37 @@ def test_export_to_kml(sample_photos):
     """Test KML export."""
     service = ExportService()
     result = service.export_to_kml(sample_photos)
-    
+
     assert "<?xml" in result
     assert "<kml" in result
     assert "<Placemark>" in result
     assert "photo1.jpg" in result
     assert "-122.0,45.0,100.0" in result
+
+
+def test_export_to_kml_escapes_filename(sample_photos):
+    """Filenames with XML special characters are escaped in KML output."""
+    sample_photos[0].filename = "a<b>&photo.jpg"
+
+    service = ExportService()
+    result = service.export_to_kml(sample_photos)
+
+    assert "a&lt;b&gt;&amp;photo.jpg" in result
+    assert "<name>a<b>" not in result
+
+
+def test_export_handles_missing_altitude(sample_photos):
+    """Photos without altitude export cleanly in all formats."""
+    sample_photos[0].metadata_.altitude = None
+
+    service = ExportService()
+
+    geojson = service.export_to_geojson(sample_photos)
+    assert geojson["features"][0]["geometry"]["coordinates"] == [-122.0, 45.0]
+
+    csv_out = service.export_to_csv(sample_photos)
+    assert "None" not in csv_out
+
+    kml = service.export_to_kml(sample_photos)
+    assert "-122.0,45.0</coordinates>" in kml
+    assert "None" not in kml

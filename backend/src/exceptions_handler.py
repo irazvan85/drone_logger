@@ -1,10 +1,13 @@
 """Global error handling middleware and exception handlers."""
+import logging
 from typing import Any
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from src.exceptions import AppException
+
+logger = logging.getLogger(__name__)
 
 
 async def app_exception_handler(request: Request, exc: AppException) -> JSONResponse:
@@ -38,6 +41,7 @@ async def general_exception_handler(request: Request, exc: Exception) -> JSONRes
     Returns:
         JSON response with generic error message
     """
+    logger.error(f"Unhandled exception on {request.method} {request.url.path}: {exc}", exc_info=exc)
     return JSONResponse(
         status_code=500,
         content={
