@@ -4,8 +4,14 @@ from typing import AsyncGenerator
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
-# Database URL from environment or use default SQLite
-DATABASE_URL = "sqlite+aiosqlite:///./app.db"
+from src.config import get_settings
+
+DATABASE_URL = get_settings().DATABASE_URL
+
+# The async engine needs the aiosqlite driver; upgrade plain sqlite:// URLs
+# so existing .env files keep working.
+if DATABASE_URL.startswith("sqlite://"):
+    DATABASE_URL = DATABASE_URL.replace("sqlite://", "sqlite+aiosqlite://", 1)
 
 # Create async engine
 engine = create_async_engine(

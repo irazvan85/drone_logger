@@ -24,16 +24,10 @@ const apiClient: AxiosInstance = axios.create({
 });
 
 /**
- * Request interceptor for logging and adding auth tokens
+ * Request interceptor for logging
  */
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // Add auth token if available
-    const token = localStorage.getItem("authToken");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-
     // Log request in development
     if (import.meta.env.DEV) {
       console.debug(`[API Request] ${config.method?.toUpperCase()} ${config.url}`, config);
@@ -62,16 +56,6 @@ apiClient.interceptors.response.use(
   (error: AxiosError<APIResponse>) => {
     // Log error response
     console.error("[API Response Error]", error.response?.status, error.response?.data);
-
-    // Handle specific error statuses
-    if (error.response?.status === 401) {
-      // Unauthorized - clear auth and redirect to login
-      localStorage.removeItem("authToken");
-      window.location.href = "/login";
-    } else if (error.response?.status === 403) {
-      // Forbidden
-      console.warn("Access denied to this resource");
-    }
 
     return Promise.reject(error);
   }
@@ -201,22 +185,6 @@ function handleAPIError(error: unknown): APIError {
   }
 
   return new APIError("An unexpected error occurred", 500, "UNKNOWN_ERROR", error);
-}
-
-/**
- * Set authentication token
- */
-export function setAuthToken(token: string): void {
-  localStorage.setItem("authToken", token);
-  apiClient.defaults.headers.common.Authorization = `Bearer ${token}`;
-}
-
-/**
- * Clear authentication token
- */
-export function clearAuthToken(): void {
-  localStorage.removeItem("authToken");
-  delete apiClient.defaults.headers.common.Authorization;
 }
 
 export default apiClient;

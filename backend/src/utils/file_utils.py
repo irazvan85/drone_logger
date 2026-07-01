@@ -66,20 +66,23 @@ def calculate_file_hash(file_path: str | Path, chunk_size: int = 8192) -> str:
     return sha256_hash.hexdigest()
 
 
-def validate_path(path_str: str) -> Path:
+def validate_path(path_str: str, allowed_root: str | Path | None = None) -> Path:
     """Validate that a path string is safe and exists.
 
-    Prevents path traversal attacks by ensuring path is absolute or
-    resolves to a safe location.
+    Prevents path traversal attacks by resolving the path (following
+    symlinks and ".." segments) and, when an allowed root is configured,
+    rejecting paths outside it.
 
     Args:
         path_str: Path string to validate
+        allowed_root: Optional directory the path must be inside
 
     Returns:
         Resolved Path object
 
     Raises:
-        ValidationError: If path is invalid or does not exist
+        ValidationError: If path is invalid, does not exist, or is outside
+            the allowed root
     """
     try:
         path = Path(path_str).resolve()
@@ -88,6 +91,11 @@ def validate_path(path_str: str) -> Path:
 
     if not path.exists():
         raise ValidationError(f"Path does not exist: {path_str}")
+
+    if allowed_root is not None:
+        root = Path(allowed_root).resolve()
+        if root != path and root not in path.parents:
+            raise ValidationError(f"Path is outside the allowed import directory: {path_str}")
 
     return path
 

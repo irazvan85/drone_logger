@@ -6,6 +6,8 @@ import { vi, describe, it, expect } from 'vitest';
 vi.mock('react-leaflet', () => ({
   MapContainer: ({ children }: any) => <div data-testid="leaflet-map">{children}</div>,
   TileLayer: () => <div data-testid="tile-layer" />,
+  Polyline: () => <div data-testid="polyline" />,
+  useMap: () => ({ zoomIn: vi.fn(), zoomOut: vi.fn(), setView: vi.fn() }),
 }));
 
 // Mock MapMarkers
